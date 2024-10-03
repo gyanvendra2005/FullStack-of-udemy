@@ -58,6 +58,9 @@ const UserSchema = new mongoose.Schema(
 
 const CourseSchema = new mongoose.Schema({
     // Schema definition here
+    avatar:{
+        type: String
+    },
     Coursename : {
         type: String,
         required: true,

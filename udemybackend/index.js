@@ -6,6 +6,7 @@ const userRouter = require("./routes/user");
 const cors = require("cors")
 // Middleware for parsing request bodies
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended:false}))
 app.use(cors())
 app.use(express.json())
 app.use("/admin", adminRouter)
