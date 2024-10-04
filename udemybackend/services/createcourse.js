@@ -6,7 +6,8 @@ const multer = require('multer')
 const createcourse = async (req,res)=>{
     // const avatar = req.body.avatar;
     const Coursename = req.body.Coursename;
-    const price = req.body.price;
+    const Price = req.body.Price;
+    const Description = req.body.Description
     console.log(req.file);
     const avatarlocalpath = req.file.path
 
@@ -31,7 +32,8 @@ const createcourse = async (req,res)=>{
         Course.create({
             avatar:avatar.url,
             Coursename,
-            price,
+            Price,
+            Description
            })
            .then(() => {
               res.status(200).json({
