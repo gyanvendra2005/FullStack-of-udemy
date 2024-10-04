@@ -13,9 +13,9 @@ router.post('/signup', (req, res) => {
     const adminname = req.body.adminname;
     const email = req.body.email;
     const password = req.body.password;
-    const fullName = req.body.fullName;
+    // const fullName = req.body.fullName;
          Admin.create({
-        fullName,
+        // fullName,
         email,
         password,
         adminname,
@@ -25,9 +25,11 @@ router.post('/signup', (req, res) => {
             message:"admin created succesfully"
         })
      })
-     .catch(() =>{
+     .catch((error) => {
         res.json({
-            message:"admin not created"
+            message:"admin not created",
+            error:error.message
+            
         })
      })
 

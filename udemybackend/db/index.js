@@ -24,7 +24,7 @@ const AdminSchema = new mongoose.Schema(
         },
         fullName: {
             type: String,
-            required: true,
+            // required: true,
             trim: true,
             index: true
         },
@@ -41,19 +41,23 @@ const UserSchema = new mongoose.Schema(
         username: {
             type: String,
             required: true,
-            unique: true,
-            lowercase: true,
-            trim: true,
-            index: true
+            // unique: true,
+            // lowercase: true,
+            // trim: true,
+            // index: true
         },
         password: {
             type: String,
             required: true   
-    },
-    purchasedCourse: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
-    }]
+        },
+        email: {
+            type: String,
+            required: true
+        }
+    // purchasedCourse: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Course'
+    // }]
 });
 
 const CourseSchema = new mongoose.Schema({

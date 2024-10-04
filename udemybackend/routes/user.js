@@ -5,24 +5,60 @@ const { User, Course } = require("../db")
 
 
 // User Routes
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
     // Implement user signup logic
     const username = req.body.username
     const password = req.body.password
-    User.create({
-        username,
-        password
-    })
-    .then(() => {
-        res.status(200).json({
-            message:"User created succesfully"
+    const email = req.body.email
+
+    // const existUser = User.findOne({
+    //     $or: username , email
+    // })
+    const existUser = await User.findOne({
+        $or: [{username},{email}]
+       })
+    if(!existUser){
+        // res.status(404).json({
+        //     message:"user with this username or email already exist"
+        // })
+        User.create({
+            username,
+            password,
+            email
         })
-    })
-    .catch(() => {
-        res.status(403).json({
-            message:"User does not created"
+        .then(() => {
+            res.status(200).json({
+                message:"User created succesfully"
+            })
         })
-    })
+        .catch((error) => {
+            res.status(403).json({
+                message:"User does not created",
+                error:error.message
+            })
+        })
+    }
+    else{
+        res.status(404).json({
+                message:"user with this username or email already exist"
+            })
+    }
+    // User.create({
+    //     username,
+    //     password,
+    //     email
+    // })
+    // .then(() => {
+    //     res.status(200).json({
+    //         message:"User created succesfully"
+    //     })
+    // })
+    // .catch((error) => {
+    //     res.status(403).json({
+    //         message:"User does not created",
+    //         error:error.message
+    //     })
+    // })
 });
 
 router.get('/courses', async (req, res) => {
