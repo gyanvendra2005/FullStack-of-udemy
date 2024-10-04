@@ -7,6 +7,7 @@ import Layout from './Layout.jsx'
 import Home from './components/Home/Home.jsx'
 import ViewCourse from './components/Viewcourse/ViewCourse.jsx'
 import SignUp from './components/SignUp/SignUp.jsx'
+import Login from './components/Login/Login.jsx'
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
        {
         path:'signup',
         element:<SignUp />
+       },
+       {
+        path:"login",
+        element:<Login />
        }
     ]
   }
