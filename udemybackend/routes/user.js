@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const router = Router();
 const userMiddleware = require("../middleware/user");
-const { User, Course } = require("../db")
+const { User, Course, Login } = require("../db");
+const { message } = require("statuses");
 
 
 // User Routes
@@ -39,9 +40,9 @@ router.post('/signup', async (req, res) => {
         })
     }
     else{
-        res.status(404).json({
+        return res.status(404).json({
                 message:"user with this username or email already exist"
-            })
+               })
     }
     // User.create({
     //     username,
@@ -60,6 +61,40 @@ router.post('/signup', async (req, res) => {
     //     })
     // })
 });
+router.post('/login', async (req,res)=>{
+     const username= req.body.username
+     const password = req.body.password
+     
+     const checkUserExist = User.findOne({username})
+     if(!checkUserExist){
+        return res.json({
+            message:"Username is not found"
+        })
+     }
+     const validpassword = await compare(password,checkUserExist.password)
+     if(!validpassword){
+        res.json({
+            message:"Password is not valid"
+        })
+     }
+     else{
+           Login.create({
+            username,
+            password,
+           })
+           .then(() => {
+            res.status(200).json({
+                message:"User successfully loggedIn"
+                })
+            })
+            .catch((error) => {
+            res.status(403).json({
+                message:"User not login",
+                error:error.message
+                })
+            })
+     }
+})
 
 router.get('/courses', async (req, res) => {
     // Implement listing all courses logic

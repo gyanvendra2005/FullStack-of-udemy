@@ -60,6 +60,17 @@ const UserSchema = new mongoose.Schema(
     // }]
 });
 
+const UserLogin = new mongoose.Schema({
+     username: {
+        type: String,
+        required:true
+     },
+     password: {
+        type:String,
+        required:true
+     }
+});
+
 const CourseSchema = new mongoose.Schema({
     // Schema definition here
     avatar:{
@@ -82,9 +93,11 @@ const CourseSchema = new mongoose.Schema({
 const Admin = mongoose.model('Admin', AdminSchema);
 const User = mongoose.model('User', UserSchema);
 const Course = mongoose.model('Course', CourseSchema);
+const Login = mongoose.model('Login',UserLogin);
 
 module.exports = {
     Admin,
     User,
     Course,
+    Login,
 }
