@@ -3,6 +3,7 @@ const router = Router();
 const userMiddleware = require("../middleware/user");
 const { User, Course, Login } = require("../db");
 const { message } = require("statuses");
+const bcrypt = require('bcrypt')
 
 
 // User Routes
@@ -11,17 +12,11 @@ router.post('/signup', async (req, res) => {
     const username = req.body.username
     const password = req.body.password
     const email = req.body.email
-
-    // const existUser = User.findOne({
-    //     $or: username , email
-    // })
+    // const haspassword = await bcrypt.hashSync(password, 10)
     const existUser = await User.findOne({
         $or: [{username},{email}]
        })
     if(!existUser){
-        // res.status(404).json({
-        //     message:"user with this username or email already exist"
-        // })
         User.create({
             username,
             password,
@@ -44,23 +39,9 @@ router.post('/signup', async (req, res) => {
                 message:"user with this username or email already exist"
                })
     }
-    // User.create({
-    //     username,
-    //     password,
-    //     email
-    // })
-    // .then(() => {
-    //     res.status(200).json({
-    //         message:"User created succesfully"
-    //     })
-    // })
-    // .catch((error) => {
-    //     res.status(403).json({
-    //         message:"User does not created",
-    //         error:error.message
-    //     })
-    // })
 });
+
+// login route
 router.post('/login', async (req,res)=>{
      const username= req.body.username
      const password = req.body.password
@@ -71,13 +52,19 @@ router.post('/login', async (req,res)=>{
             message:"Username is not found"
         })
      }
-     const validpassword = await compare(password,checkUserExist.password)
-     if(!validpassword){
-        res.json({
-            message:"Password is not valid"
-        })
-     }
-     else{
+    //  const validpassword = await bcrypt.compare(password, checkUserExist.password) 
+     
+    //  function(err, res) {
+    //     if(err) {
+    //         console.log('Comparison error: ', err);
+    //     }})
+
+    //  if(!validpassword){
+    //     res.json({
+    //         message:"Password is not valid"
+    //     })
+    //  }
+    //  else{
            Login.create({
             username,
             password,
@@ -94,7 +81,8 @@ router.post('/login', async (req,res)=>{
                 })
             })
      }
-})
+// }
+)
 
 router.get('/courses', async (req, res) => {
     // Implement listing all courses logic
