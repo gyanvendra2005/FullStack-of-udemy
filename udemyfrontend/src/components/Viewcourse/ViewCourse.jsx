@@ -11,7 +11,7 @@ useEffect(() => {
     .then(async (res)=>{
       const json = await res.json();
       setCourses(json.courses)
-      console.log('workin');
+      console.log('working');
       
     })
     .catch(()=>{

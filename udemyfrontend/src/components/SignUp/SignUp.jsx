@@ -1,31 +1,40 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 
 const SignUp = () => {
       const [username , setUsername] = useState("")
       const [password, setPassword] = useState("")
       const [email, setEmail] = useState("")
 
-    const add = () => {
-        fetch("http://localhost:3000/user/signup",{
-            method:"POST",
-            body: JSON.stringify({
+    const add = async() => {
+        // fetch("http://localhost:3000/user/signup",{
+        //     method:"POST",
+        //     body: JSON.stringify({
+        //         username:username,
+        //         password:password,
+        //         email:email
+        //     }),
+        //     headers: {
+        //         "content-type":"application/json"
+        //     }
+
+        // })
+        const response = await axios.post("http://localhost:3000/user/signup",{
                 username:username,
                 password:password,
                 email:email
-            }),
-            headers: {
-                "content-type":"application/json"
-            }
         })
-        .then(async (res)=>{
-            const json = await res.json()
-            console.log(json);
+        console.log(response.data);
+        // .then(async (res)=>{
+        //     const json = await res.json()
+        //     console.log(json);
             
-            alert("User created") 
-        })
-        setEmail("")
+        //     alert("User created") 
+        // })
+        setEmail("") 
         setPassword("")
         setUsername("")
+
     }
 
   return (
