@@ -9,6 +9,7 @@ import ViewCourse from './components/Viewcourse/ViewCourse.jsx'
 import SignUp from './components/SignUp/SignUp.jsx'
 import Login from './components/Login/Login.jsx'
 
+
 const router = createBrowserRouter([
   {
     path:'/',

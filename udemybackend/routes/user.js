@@ -3,7 +3,9 @@ const router = Router();
 const userMiddleware = require("../middleware/user");
 const { User, Course, Login } = require("../db");
 const { message } = require("statuses");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const JWT_SECRET = require("../config");
+const jwt = require('jsonwebtoken')
 
 
 // User Routes
@@ -17,22 +19,39 @@ router.post('/signup', async (req, res) => {
         $or: [{username},{email}]
        })
     if(!existUser){
-        User.create({
+        const user = await User.create({
             username,
             password,
             email
         })
-        .then(() => {
-            res.status(200).json({
-                message:"User created succesfully"
+        const userId = user._id
+        try {
+            const token = jwt.sign({
+                userId:user._id
+               },JWT_SECRET)
+               res.status(200).json({
+                message:"User created",
+                token:token
             })
-        })
-        .catch((error) => {
-            res.status(403).json({
-                message:"User does not created",
-                error:error.message
+        } catch{
+            res.send(400).json({
+                message:"user not created"
             })
-        })
+        }
+       
+
+
+    //     .then(() => {
+    //         res.status(200).json({
+    //             message:"User created succesfully"
+    //         })
+    //     })
+    //     .catch((error) => {
+    //         res.status(403).json({
+    //             message:"User does not created",
+    //             error:error.message
+    //         })
+    //     })
     }
     else{
         return res.status(404).json({

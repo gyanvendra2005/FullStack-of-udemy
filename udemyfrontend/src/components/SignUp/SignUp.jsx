@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-
+import { useNavigate } from 'react-router-dom'
 const SignUp = () => {
       const [username , setUsername] = useState("")
       const [password, setPassword] = useState("")
       const [email, setEmail] = useState("")
+      const navigate = useNavigate()
 
     const add = async() => {
         // fetch("http://localhost:3000/user/signup",{
@@ -25,12 +26,15 @@ const SignUp = () => {
                 email:email
         })
         console.log(response.data);
+        localStorage.setItem("token",response.data.token)
+        navigate("/")
         // .then(async (res)=>{
         //     const json = await res.json()
         //     console.log(json);
             
         //     alert("User created") 
         // })
+
         setEmail("") 
         setPassword("")
         setUsername("")
