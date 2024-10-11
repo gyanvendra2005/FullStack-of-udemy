@@ -38,20 +38,6 @@ router.post('/signup', async (req, res) => {
                 message:"user not created"
             })
         }
-       
-
-
-    //     .then(() => {
-    //         res.status(200).json({
-    //             message:"User created succesfully"
-    //         })
-    //     })
-    //     .catch((error) => {
-    //         res.status(403).json({
-    //             message:"User does not created",
-    //             error:error.message
-    //         })
-    //     })
     }
     else{
         return res.status(404).json({
@@ -61,47 +47,46 @@ router.post('/signup', async (req, res) => {
 });
 
 // login route
-router.post('/login', async (req,res)=>{
-     const username= req.body.username
-     const password = req.body.password
-     
-     const checkUserExist = User.findOne({username})
-     if(!checkUserExist){
-        return res.json({
-            message:"Username is not found"
-        })
-     }
-    //  const validpassword = await bcrypt.compare(password, checkUserExist.password) 
-     
-    //  function(err, res) {
-    //     if(err) {
-    //         console.log('Comparison error: ', err);
-    //     }})
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
 
-    //  if(!validpassword){
-    //     res.json({
-    //         message:"Password is not valid"
-    //     })
-    //  }
-    //  else{
-           Login.create({
-            username,
-            password,
-           })
-           .then(() => {
-            res.status(200).json({
-                message:"User successfully loggedIn"
-                })
-            })
-            .catch((error) => {
-            res.status(403).json({
-                message:"User not login",
-                error:error.message
-                })
-            })
-     }
-// }
-)
+    try {
+        // Check if user exists
+        const checkUserExist = await User.findOne({
+            $or: [{ username }, { email: username }] // assuming email can be used as username
+        });
+
+        if (!checkUserExist) {
+            return res.status(404).json({
+                message: "Username or email not found"
+            });
+        }
+
+        // Compare the password with the hashed password stored in the database
+        // const validPassword = await bcrypt.compare(password, checkUserExist.password);
+        
+        // if (!validPassword) {
+        //     return res.status(401).json({
+        //         message: "Invalid password"
+        //     });
+        // }
+        const token = jwt.sign({
+            userId:checkUserExist._id
+           },JWT_SECRET)
+        return res.status(200).json({
+            message: "User successfully logged in",
+            token:token
+        });
+
+    } catch (error) {
+        console.error('Login error: ', error);
+        return res.status(500).json({
+            message: "An error occurred during login",
+            error: error.message
+        });
+    }
+});
+
 
 router.get('/courses', async (req, res) => {
     // Implement listing all courses logic
@@ -111,54 +96,84 @@ router.get('/courses', async (req, res) => {
             Coursename:{
                 "$regex":filter
             }},
-            // {
-            //     desc:{
-            //         "$regex":filter
-            //     }
-        // }]
         ]
     })
-    // const courses =  await Course.find({})
     res.status(200).json({
         courses: courses
     })
 });
 
-router.post('/courses/:courseId', userMiddleware, async (req, res) => {
-    // Implement course purchase logic
-    const courseId = req.params.courseId;
-    const username = req.headers.username
+// router.post('/courses/:courseId', async (req, res) => {
+//     // Implement course purchase logic
+//     const courseId = req.params.courseId;
+//     const username = req.headers.username;
     
-        await User.updateOne({
-            username: username
-        }, {
-             "$push" :{
-                    purchasedCourse: courseId
-                } 
+//         await User.updateOne({
+//             username: username
+//         }, {
+//              "$push" :{
+//                     purchasedCourse: courseId
+//                 } 
 
             
-    })
+//     })
  
-    res.json({
-        message:"purchased completed"
-    })
+//     res.json({
+//         message:"purchased completed"
+//     })
 
-})
-router.get('/purchasedCourses', userMiddleware, async (req, res) => {
+// })
+router.post('/courses/:courseId', async (req, res) => {
+    const courseId = req.params.courseId;
+    const username = req.headers.username;
+
+    try {
+        // Ensure username is provided
+        if (!username) {
+            return res.status(400).json({ message: "Username is required" });
+        }
+
+        // Update user's purchased courses
+        const result = await User.updateOne(
+            { username: username },
+            { $addToSet: { purchasedCourse: courseId } } // Use $addToSet to avoid duplicates
+        );
+
+        // Check if the user was found and updated
+        if (result.nModified === 0) {
+            return res.status(404).json({ message: "User not found or course already purchased" });
+        }
+
+        res.status(200).json({ message: "Purchase completed" });
+
+    } catch (error) {
+        console.error('Error during course purchase: ', error);
+        res.status(500).json({ message: "An error occurred during purchase", error: error.message });
+    }
+});
+
+router.get('/purchasedCourses',userMiddleware, async (req, res) => {
     // Implement fetching purchased courses logic
    const user = await User.findOne({
-    username: req.headers.username
+    username: req.body.username
    })
+
+     console.log(user.purchasedCourse);
+     
    const courses = await Course.find({
     _id: {
         "$in" : user.purchasedCourse
     }
+    // _id: user.purchasedCourse
    })
    res.json({
-    coures: courses
+    courses: courses
    })
 
 });
+
+
+
 router.get('/search',async (req,res)=>{
     const filter = req.query.filter || "";
 

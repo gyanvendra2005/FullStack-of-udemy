@@ -66,6 +66,7 @@ import SignUp from './components/SignUp/SignUp.jsx';
 import Login from './components/Login/Login.jsx';
 import { reducer, initialState } from './reducer/useReducer.js';
 import Logout from './components/Logout/Logout.jsx';
+import PurchasedCourse from './components/PurchasedCourse/PurchasedCourse.jsx';
 
 export const userContext = createContext();
 
@@ -99,7 +100,7 @@ function App() {
         },
         {
           path:"purchasedcourse",
-          element:<ViewCourse />
+          element:<PurchasedCourse />
         }
       ],
     },

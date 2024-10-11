@@ -1,34 +1,39 @@
 import React,{useContext, useState} from 'react'
 import { userContext } from '../../App'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 const Login = () => {
-    const [username , setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const {state, dispatch} = useContext(userContext)
-    const navigate = useNavigate()
-    const login = () =>{
-        fetch("http://localhost:3000/user/login",{
-            method:"POST",
-            body: JSON.stringify({
-                username:username,
-                password:password,
-                // email:email
-            }),
-            headers: {
-                "content-type":"application/json"
-            }
-        })
-        .then(async (res)=>{
-            const json = await res.json()
-            console.log(json);
-            dispatch({type:"USER", payload:true})
-            alert("User LoggedIn") 
-            navigate("/")
-        })
-        setPassword("")
-        setUsername("")
-    
-    }
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const { dispatch } = useContext(userContext);
+    const navigate = useNavigate();
+
+    const login = async () => {
+        try {
+            const response = await axios.post("http://localhost:3000/user/login", {
+                username,
+                password,
+            });
+
+            // Assuming the token is in response.data.token
+            localStorage.setItem("token", response.data.token);
+
+            // Dispatch the user login action
+            dispatch({ type: "USER", payload: true });
+            alert("User Logged In");
+            navigate("/");
+
+        } catch (error) {
+            // Handle error from Axios response
+            const errorMessage = error.response?.data?.message || 'Login failed';
+            console.log('Login error: ', error);
+            alert('Invalid details: ' + errorMessage);
+        } finally {
+            // Reset form fields
+            setUsername("");
+            setPassword("");
+        }
+    };
 
   return (
     <div className='m-10 flex'>

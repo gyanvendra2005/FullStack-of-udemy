@@ -53,11 +53,12 @@ const UserSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true
+        },
+        purchasedCourse: {
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: 'Course'
+        type:String
         }
-    // purchasedCourse: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Course'
-    // }]
 });
 
 const UserLogin = new mongoose.Schema({
