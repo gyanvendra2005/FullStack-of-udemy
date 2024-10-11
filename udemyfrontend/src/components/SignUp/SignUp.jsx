@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext ,useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { userContext } from '../../App'
 const SignUp = () => {
       const [username , setUsername] = useState("")
       const [password, setPassword] = useState("")
       const [email, setEmail] = useState("")
+      const {state, dispatch} = useContext(userContext)
       const navigate = useNavigate()
 
     const add = async() => {
@@ -27,12 +29,22 @@ const SignUp = () => {
         })
         console.log(response.data);
         localStorage.setItem("token",response.data.token)
-        navigate("/")
+        try {
+            dispatch({type:"USER", payload:true})
+            alert("User created") 
+            navigate("/")
+        } catch (res) {
+            res.status(400).json({
+                message:"User not created"
+            })
+        }
+        // change newly
         // .then(async (res)=>{
         //     const json = await res.json()
         //     console.log(json);
-            
+        //     dispatch({type:"USER", payload:true})
         //     alert("User created") 
+        //     navigate("/")
         // })
 
         setEmail("") 

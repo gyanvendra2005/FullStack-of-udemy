@@ -1,19 +1,13 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import {Link, NavLink} from 'react-router-dom'
-
+import { userContext } from '../../App'
 export default function Header() {
-    return (
-        <header className="shadow sticky z-50 top-0">
-            <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
-                <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-                    <Link to="/" className="flex items-center">
-                        <img
-                            src="https://frontends.udemycdn.com/frontends-homepage/staticx/udemy/images/v7/logo-udemy.svg"
-                            className="mr-3 h-12"
-                            alt="Logo"
-                        />
-                    </Link>
-                    <div className="flex items-center lg:order-2">
+    const {state, dispatch} = useContext(userContext)
+    const RenderMenu = () => {
+        if(!state){
+            return(
+                <>
+                     <div className="flex items-center lg:order-2">
                         <Link
                             to="/login"
                             className="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
@@ -26,7 +20,76 @@ export default function Header() {
                         >
                             Sign up
                         </Link>
+                        {/* <Link
+                            to="/logout"
+                            className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            LogOut
+                        </Link> */}
                     </div>
+                </>
+            )
+        }
+        else{
+            return(
+                <>
+                      <div className="flex items-center lg:order-2">
+                        {/* <Link
+                            to="/login"
+                            className="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            Log in
+                        </Link>
+                        <Link
+                            to="/signup"
+                            className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            Sign up
+                        </Link> */}
+                        <Link
+                            to="/logout"
+                            className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            LogOut
+                        </Link>
+                    </div>
+                </>
+            )
+        }
+    }
+
+    return (
+        <header className="shadow sticky z-50 top-0">
+            <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
+                <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+                    <Link to="/" className="flex items-center">
+                        <img
+                            src="https://frontends.udemycdn.com/frontends-homepage/staticx/udemy/images/v7/logo-udemy.svg"
+                            className="mr-3 h-12"
+                            alt="Logo"
+                        />
+                    </Link>
+                    <RenderMenu/>
+                    {/* <div className="flex items-center lg:order-2">
+                        <Link
+                            to="/login"
+                            className="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            Log in
+                        </Link>
+                        <Link
+                            to="/signup"
+                            className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            Sign up
+                        </Link>
+                        <Link
+                            to="/logout"
+                            className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            LogOut
+                        </Link>
+                    </div> */}
                     <div
                         className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
                         id="mobile-menu-2"

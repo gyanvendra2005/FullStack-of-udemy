@@ -1,9 +1,11 @@
-import React,{useState} from 'react'
-
+import React,{useContext, useState} from 'react'
+import { userContext } from '../../App'
+import { useNavigate } from 'react-router-dom'
 const Login = () => {
     const [username , setUsername] = useState("")
     const [password, setPassword] = useState("")
-
+    const {state, dispatch} = useContext(userContext)
+    const navigate = useNavigate()
     const login = () =>{
         fetch("http://localhost:3000/user/login",{
             method:"POST",
@@ -19,8 +21,9 @@ const Login = () => {
         .then(async (res)=>{
             const json = await res.json()
             console.log(json);
-            
+            dispatch({type:"USER", payload:true})
             alert("User LoggedIn") 
+            navigate("/")
         })
         setPassword("")
         setUsername("")

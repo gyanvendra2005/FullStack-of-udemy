@@ -1,10 +1,35 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 
-export default function Card({courses}) {
+export default function Card() {
+
+//  const[filter, setFilter ] = useState("")   
+const [courses, setCourses] = useState([])
+  const [filter, setFilter] = useState("")
+useEffect(() => {
+  return () => {
+    fetch("http://localhost:3000/user/courses?filter="+filter)
+    .then(async (res)=>{
+      const json = await res.json();
+      setCourses(json.courses)
+      console.log('working');
+      
+    })
+    .catch(()=>{
+      console.log('not working');
+    }
+    )
+  }
+}, [filter])
+
     return (
+  <div>
+    <input type="text" placeholder='Search User...' value={filter} onChange={(e)=>setFilter(e.target.value)} className='w-80 border mt-3 px-3 py-2 rounded focus:outline-none focus:ring-1 ring-primary-lighter' 
+    />    
 <div className='flex flex-col items-center'>
+
     <h1 className='text-center p-5 text-2xl font-bold'>Courses</h1>
     <div className='flex flex-wrap justify-center'>
+        
         {courses.map((course) => (
             <div key={course.id} className='flex p-0 m-5 w-full max-w-sm bg-white border border-gray-800 rounded-3xl shadow-md'>
                 <div className="w-full">
@@ -25,7 +50,7 @@ export default function Card({courses}) {
         ))}
     </div>
 </div>
-
+</div>  
 
         // </>
     )

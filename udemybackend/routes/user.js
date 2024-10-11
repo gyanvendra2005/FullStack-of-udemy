@@ -105,7 +105,20 @@ router.post('/login', async (req,res)=>{
 
 router.get('/courses', async (req, res) => {
     // Implement listing all courses logic
-    const courses =  await Course.find({})
+    const filter = req.query.filter || "";
+    const courses=await Course.find({
+        $or:[{
+            Coursename:{
+                "$regex":filter
+            }},
+            // {
+            //     desc:{
+            //         "$regex":filter
+            //     }
+        // }]
+        ]
+    })
+    // const courses =  await Course.find({})
     res.status(200).json({
         courses: courses
     })
